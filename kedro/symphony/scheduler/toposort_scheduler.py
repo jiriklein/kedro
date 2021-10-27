@@ -34,7 +34,7 @@ class ToposortScheduler(AbstractScheduler):
         Returns:
             List of Nodes.
         """
-        if not self.todo_nodes():
+        if not self.todo_nodes:
             raise StopIteration
 
         ready = {
