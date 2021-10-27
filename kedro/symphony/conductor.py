@@ -21,10 +21,13 @@ class Conductor:
     """
 
     def __init__(
-        self, scheduler: AbstractScheduler, executor: "Executor", catalog: DataCatalog
+        self,
+        scheduler: AbstractScheduler,
+        catalog: DataCatalog,
+        default_executor: str = "SequentialExecutor",
     ):
         self.scheduler = scheduler
-        self.default_executor = executor
+        self.default_executor = default_executor
         self.catalog = catalog
         self.allocated_nodes = {}
 
