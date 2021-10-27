@@ -35,6 +35,9 @@ class AbstractScheduler(abc.ABC):
     def __next__(self) -> List[Node]:
         """List of nodes that are next to be executed.
 
+        Raises:
+            StopIteration when we're done iterating.
+
         Returns:
             List of nodes.
         """
