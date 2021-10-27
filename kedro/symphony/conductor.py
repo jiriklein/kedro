@@ -40,7 +40,7 @@ class Conductor:
             for executor_name, nodes in allocated_ready_nodes.items():
                 # this should be a singleton and not instantiated every time
                 executor = load_obj(executor_name.split(_EXECUTOR_TAG_PREFIX)[1])
-                executor.run(nodes)
+                executor.run(nodes, self.catalog)
 
     def _allocate_nodes_to_executors(
         self, ready_nodes: List[Node]
