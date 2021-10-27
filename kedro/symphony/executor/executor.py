@@ -38,7 +38,7 @@ from concurrent.futures import (
     as_completed,
     wait,
 )
-from typing import Iterable
+from typing import Any, Dict, Iterable
 
 from kedro.framework.hooks import get_hook_manager
 from kedro.io import AbstractDataSet, DataCatalog
