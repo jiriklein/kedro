@@ -6,6 +6,7 @@ from typing import Dict, List, Set
 from kedro.symphony.scheduler.scheduler import AbstractScheduler
 from kedro.pipeline.node import Node
 from kedro.utils import load_obj
+from kedro.io.data_catalog import DataCatalog
 
 
 _EXECUTOR_TAG_PREFIX = "executor:"
@@ -19,9 +20,12 @@ class Conductor:
     is considered immutable.
     """
 
-    def __init__(self, scheduler: AbstractScheduler, executor: "Executor"):
+    def __init__(
+        self, scheduler: AbstractScheduler, executor: "Executor", catalog: DataCatalog
+    ):
         self.scheduler = scheduler
         self.default_executor = executor
+        self.catalog = catalog
         self.allocated_nodes = {}
 
     def run(self):
