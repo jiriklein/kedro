@@ -109,6 +109,7 @@ class _ProjectSettings(LazySettings):
                 self._DISABLE_HOOKS_FOR_PLUGINS,
                 self._CONFIG_LOADER_CLASS,
                 self._CONFIG_LOADER_ARGS,
+                self._SCHEDULER_CLASS,
             ]
         )
         super().__init__(*args, **kwargs)
