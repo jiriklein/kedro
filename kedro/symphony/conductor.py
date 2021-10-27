@@ -30,7 +30,7 @@ class Conductor:
             allocated_ready_nodes: Dict[
                 str, List[Node]
             ] = self._allocate_nodes_to_executors(ready_nodes)
-            for executor_name, nodes in allocated_ready_nodes:
+            for executor_name, nodes in allocated_ready_nodes.items():
                 # this should be a singleton and not instantiated every time
                 executor = load_obj(executor_name.split(_EXECUTOR_TAG_PREFIX)[1])
                 executor.run(nodes)
