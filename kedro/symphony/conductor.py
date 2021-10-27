@@ -26,11 +26,11 @@ class Conductor:
     def run(self):
         # group all ready nodes on available executors
         for ready_nodes in self.scheduler:
-            allocated_ready_nodes = self._allocate_nodes_to_executors(ready_nodes)
-            for executor_name, node in allocated_ready_nodes:
-                # this should be a singleton
+            allocated_ready_nodes: Dict[str, List[Node]] = self._allocate_nodes_to_executors(ready_nodes)
+            for executor_name, nodes in allocated_ready_nodes:
+                # this should be a singleton and not instantiated every time
                 executor = load_obj(executor_name.split(_EXECUTOR_TAG_PREFIX)[1])
-                executor.run()
+                executor.run(nodes)
 
     def _allocate_nodes_to_executors(self, ready_nodes: List[Node]) -> Dict[str, List[Node]]:
         output = defaultdict(list)
