@@ -24,7 +24,6 @@ class ToposortScheduler(AbstractScheduler):
         self.node_dependencies = pipeline.node_dependencies
         self.todo_nodes = set(self.node_dependencies.keys())
         self.done_nodes = set()
-        self.ready_nodes = set()
 
     def __next__(self) -> List[Node]:
         """Get the next list of nodes in topological order.
@@ -41,7 +40,8 @@ class ToposortScheduler(AbstractScheduler):
         ready = {
             n for n in self.todo_nodes if self.node_dependencies[n] <= self.done_nodes
         }
-        self.todo_nodes -= ready
+
+        self.todo_nodes = self.todo_nodes.difference(ready)
         self.done_nodes = self.done_nodes.union(ready)
 
         return list(ready)
