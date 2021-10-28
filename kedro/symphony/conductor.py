@@ -58,10 +58,7 @@ class Conductor:
             assert (
                 len(executor_tags) <= 1
             )  # there should not be more than one executor tag
-            try:
-                executor_tag = next(iter(executor_tags))
-            except StopIteration:
-                executor_tag = default_executor
+            executor_tag = next(iter(executor_tags), default_executor)
 
             output[executor_tag].append(node)  # this is where nodes will go
 
