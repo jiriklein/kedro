@@ -1,4 +1,4 @@
-"""``SubgraphScheduler`` class definition.
+"""``LargestSubgraphScheduler`` class definition.
 """
 
 from typing import List
