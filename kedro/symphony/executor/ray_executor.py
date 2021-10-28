@@ -1,4 +1,5 @@
 from typing import Any, Dict, Iterable
+import warnings
 
 import ray
 
@@ -6,8 +7,6 @@ from kedro.io import AbstractDataSet, DataCatalog, MemoryDataSet
 from kedro.pipeline.node import Node
 from kedro.symphony.executor.executor import AbstractExecutor
 
-
-# assert type(f) == ray.remote_function.RemoteFunction
 
 class RayExecutor(AbstractExecutor):
     def __init__(self, nodes: Iterable[Node], is_async: bool = False):
@@ -21,6 +20,7 @@ class RayExecutor(AbstractExecutor):
         """
         super().__init__(nodes, is_async=is_async)
         self._ray_config: Dict[str, Any] = {}  # TODO: Jiri - conf from YAML
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
         ray.init(ignore_reinit_error=True, num_cpus=8, num_gpus=1)
 
     def create_default_data_set(self, ds_name: str) -> AbstractDataSet:
@@ -34,7 +34,7 @@ class RayExecutor(AbstractExecutor):
             for all unregistered data sets.
 
         """
-        return MemoryDataSet(ds_name)
+        return MemoryDataSet(ds_name)  # this needs to be bespoke to Ray
 
     def _run(
         self, nodes: Iterable[Node], catalog: DataCatalog, run_id: str = None
@@ -54,8 +54,11 @@ class RayExecutor(AbstractExecutor):
 
         for _df, _node in zip(decorated_node_funcs, nodes):
             materialized_inputs = [catalog.load(_input) for _input in _node.inputs]
+            self._logger.info("Submitting node %s to Ray Executor", _node.name)
             result_ids.append(_df.remote(*materialized_inputs))  # submit (non-blocking)
 
+        waiting_node_count = len(result_ids)
+        self._logger.info("Collecting %d nodes from Ray Executor", waiting_node_count)
         results = ray.get(result_ids)  # blocking
 
         for _res, _node in zip(results, nodes):
